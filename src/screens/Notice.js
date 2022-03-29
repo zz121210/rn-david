@@ -3,11 +3,19 @@ import { View, SafeAreaView, StyleSheet, Text, TextInput, Button, ScrollView, Fl
 import database, { firebase } from '@react-native-firebase/database';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
+
 const Notice = ({ navigation }) => {
 
   const text1 = useRef(null);
   const [notice, setNotice] = useState('');
   const [data, setData] = useState('');
+  const [role, setRole] = useState('');
+  
+  AsyncStorage.getItem('userData')
+    .then(data =>  { 
+      setRole(JSON.parse(data).role);
+    });
 
   const regNotice = (notice) => {
     if(notice != "") {
@@ -18,6 +26,7 @@ const Notice = ({ navigation }) => {
           .ref('/notices/' + key)
           .set({
             id : JSON.parse(data).id,
+            nickname : JSON.parse(data).nickname,
             notice: notice,
             regDate: new Date().toString(),
           })
@@ -35,7 +44,7 @@ const Notice = ({ navigation }) => {
         snapshot.forEach(child => {
           tmp.push({
             key : child.key,
-            id : child.val().id,
+            nickname : child.val().nickname,
             notice : child.val().notice,
             regDate: child.val().regDate
           })
@@ -62,7 +71,7 @@ const Notice = ({ navigation }) => {
             justifyContent: 'space-between'
           }}>
             <Text>
-              {item.id}
+              {item.nickname}
             </Text>
             <Text>
             </Text>
@@ -76,27 +85,39 @@ const Notice = ({ navigation }) => {
     );
   }
 
-  return(
-    <SafeAreaView style={{flex: 1}}>
-      <View>
-        <FlatList data={data} renderItem={renderItem}/>
-      </View>
-      <View style={{display:"flex", position: 'absolute', left: 0, right: 0, bottom: 0, backgroundColor: "white", paddingRight: 20, paddingLeft: 20, flexDirection: 'row'}}>
-        <TextInput
-          ref={text1}
-          style = {{flex: 4}}
-          multiline ={true}
-          onChangeText={text => setNotice(text)}
-        ></TextInput>
-        <View style = {{flex: 1}}>
-          <Button
-            onPress={() => regNotice(notice)}
-            title="등록"
-          />
+  if(role == "teacher") {
+    return(
+      <SafeAreaView style={{flex: 1}}>
+        <View>
+          <FlatList data={data} renderItem={renderItem}/>
         </View>
-      </View>
-    </SafeAreaView>
-  )
+        <View style={{display:"flex", position: 'absolute', left: 0, right: 0, bottom: 0, backgroundColor: "white", paddingRight: 20, paddingLeft: 20, flexDirection: 'row'}}>
+          <TextInput
+            ref={text1}
+            style = {{flex: 4}}
+            multiline ={true}
+            onChangeText={text => setNotice(text)}
+          ></TextInput>
+          <View style = {{flex: 1}}>
+            <Button
+              onPress={() => regNotice(notice)}
+              title="등록"
+            />
+          </View>
+        </View>
+      </SafeAreaView>
+    )
+  } else {
+    return(
+      <SafeAreaView style={{flex: 1}}>
+        <View>
+          <FlatList data={data} renderItem={renderItem}/>
+        </View>
+        <View style={{display:"flex", position: 'absolute', left: 0, right: 0, bottom: 0, backgroundColor: "white", paddingRight: 20, paddingLeft: 20, flexDirection: 'row'}}>
+        </View>
+      </SafeAreaView>
+    )
+  }
 }
 
 export default Notice;

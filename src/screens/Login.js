@@ -17,20 +17,28 @@ function loginCheck(id, pw) {
   });
 }
 
-function loginRecoding(id, pw) {
-  AsyncStorage.setItem(
-    'userData',
-    JSON.stringify({
-      id: id,
-      token: pw
-    })
-  );
+function accountInfoAsyncStorage(id, pw) {
+  database()
+    .ref('/users')
+    .once('value')
+    .then(data => {
+      AsyncStorage.setItem(
+        'userData',
+        JSON.stringify({
+          id: id,
+          pw: pw,
+          nickname: data.val()[id]['nickname'],
+          role: data.val()[id]['role']
+        })
+      );
+  })
+
 }
 
 async function loginProcess(id, pw) {
   const loginChk = await loginCheck(id, pw);
   if(loginChk == true) {
-    loginRecoding(id, pw)
+    accountInfoAsyncStorage(id, pw)
     return true
   } else {
     return false
@@ -38,11 +46,12 @@ async function loginProcess(id, pw) {
 }
 
 
+
 const Login = ({ navigation }) => {
 
   const [id, setId] = useState('');
   const [pw, setPw] = useState('');
-
+  
   return(
     <SafeAreaView>
       <View style={{marginTop: "5%"}}>

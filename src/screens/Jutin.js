@@ -18,6 +18,7 @@ const Jutin = ({ navigation }) => {
           .ref('/jutins/' + key)
           .set({
             id : JSON.parse(data).id,
+            nickname : JSON.parse(data).nickname,
             jutin: jutin,
             regDate: new Date().toString(),
           })
@@ -35,7 +36,7 @@ const Jutin = ({ navigation }) => {
         snapshot.forEach(child => {
           tmp.push({
             key : child.key,
-            id : child.val().id,
+            nickname : child.val().nickname,
             jutin : child.val().jutin,
             regDate: child.val().regDate
           })
@@ -62,7 +63,7 @@ const Jutin = ({ navigation }) => {
             justifyContent: 'space-between'
           }}>
             <Text>
-              {item.id}
+              {item.nickname}
             </Text>
             <Text>
             </Text>

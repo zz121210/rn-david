@@ -8,6 +8,12 @@ const Event = ({ navigation }) => {
   const text1 = useRef(null);
   const [evevt, setEvent] = useState('');
   const [data, setData] = useState('');
+  const [role, setRole] = useState('');
+  
+  AsyncStorage.getItem('userData')
+    .then(data =>  { 
+      setRole(JSON.parse(data).role);
+    });
 
   const regEvent = (evevt) => {
     if(evevt != "") {
@@ -18,6 +24,7 @@ const Event = ({ navigation }) => {
           .ref('/evevts/' + key)
           .set({
             id : JSON.parse(data).id,
+            nickname : JSON.parse(data).nickname,
             evevt: evevt,
             regDate: new Date().toString(),
           })
@@ -35,7 +42,7 @@ const Event = ({ navigation }) => {
         snapshot.forEach(child => {
           tmp.push({
             key : child.key,
-            id : child.val().id,
+            nickname : child.val().nickname,
             evevt : child.val().evevt,
             regDate: child.val().regDate
           })
@@ -62,7 +69,7 @@ const Event = ({ navigation }) => {
             justifyContent: 'space-between'
           }}>
             <Text>
-              {item.id}
+              {item.nickname}
             </Text>
             <Text>
             </Text>
@@ -76,27 +83,39 @@ const Event = ({ navigation }) => {
     );
   }
 
-  return(
-    <SafeAreaView style={{flex: 1}}>
-      <View>
-        <FlatList data={data} renderItem={renderItem}/>
-      </View>
-      <View style={{display:"flex", position: 'absolute', left: 0, right: 0, bottom: 0, backgroundColor: "white", paddingRight: 20, paddingLeft: 20, flexDirection: 'row'}}>
-        <TextInput
-          ref={text1}
-          style = {{flex: 4}}
-          multiline ={true}
-          onChangeText={text => setEvent(text)}
-        ></TextInput>
-        <View style = {{flex: 1}}>
-          <Button
-            onPress={() => regEvent(evevt)}
-            title="등록"
-          />
+  if(role == "teacher") {
+    return(
+      <SafeAreaView style={{flex: 1}}>
+        <View>
+          <FlatList data={data} renderItem={renderItem}/>
         </View>
-      </View>
-    </SafeAreaView>
-  )
+        <View style={{display:"flex", position: 'absolute', left: 0, right: 0, bottom: 0, backgroundColor: "white", paddingRight: 20, paddingLeft: 20, flexDirection: 'row'}}>
+          <TextInput
+            ref={text1}
+            style = {{flex: 4}}
+            multiline ={true}
+            onChangeText={text => setEvent(text)}
+          ></TextInput>
+          <View style = {{flex: 1}}>
+            <Button
+              onPress={() => regEvent(evevt)}
+              title="등록"
+            />
+          </View>
+        </View>
+      </SafeAreaView>
+    )
+  } else {
+    return(
+      <SafeAreaView style={{flex: 1}}>
+        <View>
+          <FlatList data={data} renderItem={renderItem}/>
+        </View>
+        <View style={{display:"flex", position: 'absolute', left: 0, right: 0, bottom: 0, backgroundColor: "white", paddingRight: 20, paddingLeft: 20, flexDirection: 'row'}}>
+        </View>
+      </SafeAreaView>
+    )
+  }
 }
 
 export default Event;

@@ -3,7 +3,7 @@ import { View, SafeAreaView, StyleSheet, Text, TextInput, Button, ScrollView, Fl
 import database, { firebase } from '@react-native-firebase/database';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Comment = ({ navigation }) => {
+const Comment = () => {
 
   const text1 = useRef(null);
   const [comment, setComment] = useState('');
@@ -18,6 +18,7 @@ const Comment = ({ navigation }) => {
           .ref('/comments/' + key)
           .set({
             id : JSON.parse(data).id,
+            nickname : JSON.parse(data).nickname,
             comment: comment,
             regDate: new Date().toString(),
           })
@@ -35,7 +36,7 @@ const Comment = ({ navigation }) => {
         snapshot.forEach(child => {
           tmp.push({
             key : child.key,
-            id : child.val().id,
+            nickname : child.val().nickname,
             comment : child.val().comment,
             regDate: child.val().regDate
           })
@@ -62,7 +63,7 @@ const Comment = ({ navigation }) => {
             justifyContent: 'space-between'
           }}>
             <Text>
-              {item.id}
+              {item.nickname}
             </Text>
             <Text>
             </Text>
