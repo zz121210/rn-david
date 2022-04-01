@@ -8,14 +8,28 @@ import {
   Alert 
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const  Home = ({ navigation }) => {
+  const goToPage = (page) => {
+    AsyncStorage.getItem('userData')
+    .then(data => {
+      if(data == null){
+        alert("로그인 후에 사용 가능합니다")
+        navigation.navigate("Login")
+      } else {
+        navigation.navigate(page)
+      }
+    })
+  }
+
   return (
     <SafeAreaView style={{    
       backgroundColor: "rgb(237, 237, 237)"
     }}>
       <View style={item.purple}>
-        <TouchableOpacity onPress={ () => { navigation.navigate("Comment") }} style={item.size_harf}>
+        <TouchableOpacity onPress={ () => { goToPage("Comment") }} style={item.size_harf}>
           <View style={{
                     marginTop: "40%",
                     justifyContent: 'center',
@@ -28,7 +42,7 @@ const  Home = ({ navigation }) => {
             <Text style={{fontSize: 30, margin :10, color: "black"}}>나도 한마디</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={ () => { navigation.navigate("Album") }} style={item.size_harf}>
+        <TouchableOpacity onPress={ () => { goToPage("Album") }} style={item.size_harf}>
           <View style={{
                     marginTop: "40%",
                     justifyContent: 'center',
@@ -44,7 +58,7 @@ const  Home = ({ navigation }) => {
       </View>
 
       <View style={item.blue}>
-        <TouchableOpacity onPress={ () => { navigation.navigate("Jutin") }} style={item.size_harf}>
+        <TouchableOpacity onPress={ () => { goToPage("Jutin") }} style={item.size_harf}>
           <View>
             <Text style={{marginTop: "25%", fontSize: 30, margin :10, color: "black"}}>주틴나눔</Text>
           </View>
@@ -52,7 +66,7 @@ const  Home = ({ navigation }) => {
             <Icon name="ios-heart-outline"  size={120} color="black"/>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={ () => { navigation.navigate("Event") }} style={item.size_harf}>
+        <TouchableOpacity onPress={ () => { goToPage("Event") }} style={item.size_harf}>
           <View>
             <Text style={{marginTop: "25%", fontSize: 30, margin :10, color: "black"}}>이벤트</Text>
           </View>
@@ -63,7 +77,7 @@ const  Home = ({ navigation }) => {
       </View>
 
       <View style={item.yellow}>
-        <TouchableOpacity onPress={ () => { navigation.navigate("Notice") }} style={item.size_full}>
+        <TouchableOpacity onPress={ () => { goToPage("Notice") }} style={item.size_full}>
           <View>
             <Icon name="ios-megaphone-outline" size={100} color="black" style={{marginLeft:40}}></Icon>
           </View>

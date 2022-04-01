@@ -3,7 +3,7 @@ import { View, SafeAreaView, StyleSheet, Text, TextInput, Button, ScrollView, Fl
 import database, { firebase } from '@react-native-firebase/database';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Event = ({ navigation }) => {
+const Event = () => {
 
   const text1 = useRef(null);
   const [evevt, setEvent] = useState('');
